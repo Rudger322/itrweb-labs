@@ -2,28 +2,27 @@
 
 namespace classes;
 
-class Product
+abstract class Product
 {
-    protected $id;
     protected $name;
-    protected $price;
-    protected $description;
+    protected $basePrice;
+    protected $revenue = 0;
 
-    public function __construct($id, $name, $price, $description)
+    public function __construct($name, $basePrice)
     {
-        $this->id = $id;
         $this->name = $name;
-        $this->price = $price;
-        $this->description = $description;
+        $this->basePrice = $basePrice;
     }
 
-    public function getPrice(): float
+    abstract public function calculateFinalPrice($amount): float;
+
+    protected function addRevenue($sum)
     {
-        return $this->price;
+        $this->revenue += $sum;
     }
 
-    public function getInfo(): string
+    public function getRevenue(): float
     {
-        return $this->name . ': ' . $this->price . ' ₽';
+        return $this->revenue;
     }
 }

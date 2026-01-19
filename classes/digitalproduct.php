@@ -4,16 +4,11 @@ namespace classes;
 
 class DigitalProduct extends Product
 {
-    protected $downloadLink;
-
-    public function __construct($id, $name, $price, $description, $downloadLink)
+    public function calculateFinalPrice($amount = 1): float
     {
-        parent::__construct($id, $name, $price, $description);
-        $this->downloadLink = $downloadLink;
-    }
+        $finalPrice = ($this->basePrice / 2) * $amount;
+        $this->addRevenue($finalPrice);
 
-    public function getDownloadLink(): string
-    {
-        return $this->downloadLink;
+        return $finalPrice;
     }
 }
