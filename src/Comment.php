@@ -1,19 +1,19 @@
 <?php
 
-namespace Articles;
+namespace src;
 
-class Article
+class Comment
 {
     public $id;
     public $authorId;
-    public $title;
+    public $articleId;
     public $text;
 
-    public function __construct($id, $authorId, $title, $text)
+    public function __construct($id, $authorId, $articleId, $text)
     {
         $this->id = $id;
         $this->authorId = $authorId;
-        $this->title = $title;
+        $this->articleId = $articleId;
         $this->text = $text;
     }
 }
