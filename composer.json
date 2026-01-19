@@ -1,0 +1,19 @@
+{
+    "name": "shop/test",
+    "description": "shop",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Shop\\Test\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rudger322",
+            "email": "vovannello@gmail.com"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.20"
+    }
+}
