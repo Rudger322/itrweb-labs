@@ -1,34 +1,28 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
 
-require 'vendor/autoload.php';
-
+use App\Http\Actions\AddPostLike;
 use App\ValueObject\UUID;
-use repository\CommentsRepositoryInterface;
-use repository\PostsRepositoryInterface;
-use src\Article;
-use src\Comment;
 
-$pdo = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
+// PDO
+$pdo = new PDO('sqlite:' . __DIR__ . '/../storage/db.sqlite');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$commentsRepo = new CommentsRepositoryInterface($pdo);
-$postsRepo = new PostsRepositoryInterface($pdo);
+// Репозитории (предполагается, что SQLiteUsersRepository и SQLitePostsRepository есть)
+$usersRepo = new \App\Repository\UserRepositoryInterface($pdo);
+$postsRepo = new \repository\PostsRepositoryInterface($pdo);
+$likesRepo = new \repository\LikesRepositoryInterface($pdo, 'post_likes');
 
-$postUuid = new UUID('post-1');
-$userUuid = new UUID('user-1');
+$method = $_SERVER['REQUEST_METHOD'];
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$post = new Article($postUuid, $userUuid, 'Заголовок', 'Текст');
-$postsRepo->save($post);
+if ($method === 'POST' && $path === '/posts/like') {
+    $data = json_decode(file_get_contents('php://input'), true);
 
-$foundPost = $postsRepo->get($postUuid);
-var_dump($foundPost);
+    $action = new AddPostLike($likesRepo, $usersRepo, $postsRepo);
+    $result = $action->handle($data);
 
-$comment = new Comment(
-    new UUID('comment-1'),
-    $postUuid,
-    $userUuid,
-    'Комментарий'
-);
-$commentsRepo->save($comment);
-
-var_dump($commentsRepo->get(new UUID('comment-1')));
+    header('Content-Type: application/json');
+    echo json_encode($result);
+    exit;
+}
