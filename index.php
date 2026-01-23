@@ -1,18 +1,34 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
-require_once 'src\User.php';
-require_once 'src\Article.php';
-require_once 'src\Comment.php';
+require 'vendor/autoload.php';
 
-use src\User;
+use App\ValueObject\UUID;
+use repository\CommentsRepositoryInterface;
+use repository\PostsRepositoryInterface;
 use src\Article;
 use src\Comment;
 
-$user = new User(1, 'Иван', 'Иванов');
-$article = new Article(1, 1, 'Тест', 'Текст');
-$comment = new Comment(1, 1, 1, 'Комментарий');
+$pdo = new PDO('sqlite:' . __DIR__ . '/database.sqlite');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-echo 'Автозагрузка работает<br>';
+$commentsRepo = new CommentsRepositoryInterface($pdo);
+$postsRepo = new PostsRepositoryInterface($pdo);
 
-var_dump($user, $article, $comment);
+$postUuid = new UUID('post-1');
+$userUuid = new UUID('user-1');
+
+$post = new Article($postUuid, $userUuid, 'Заголовок', 'Текст');
+$postsRepo->save($post);
+
+$foundPost = $postsRepo->get($postUuid);
+var_dump($foundPost);
+
+$comment = new Comment(
+    new UUID('comment-1'),
+    $postUuid,
+    $userUuid,
+    'Комментарий'
+);
+$commentsRepo->save($comment);
+
+var_dump($commentsRepo->get(new UUID('comment-1')));

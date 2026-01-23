@@ -4,13 +4,13 @@ namespace src;
 
 class User
 {
-    public $id;
+    public $uuid;
     public $firstName;
     public $lastName;
 
     public function __construct($id, $firstName, $lastName)
     {
-        $this->id = $id;
+        $this->uuid = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
     }
