@@ -53,4 +53,16 @@ class PostsRepositoryInterface
             $row['text']
         );
     }
+
+    public function delete(UUID $uuid): void
+    {
+        $stmt = $this->pdo->prepare(
+            'DELETE FROM posts WHERE uuid = :uuid'
+        );
+        $stmt->execute(['uuid' => (string)$uuid]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new NotFoundException('Post not found');
+        }
+    }
 }

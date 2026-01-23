@@ -15,6 +15,7 @@
     ],
     "require": {
         "fakerphp/faker": "^1.20",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-json": "*"
     }
 }
